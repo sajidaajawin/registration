@@ -1,15 +1,13 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore} from "firebase/firestore";
-const firebaseApp = initializeApp( { apiKey: "AIzaSyCSWzicHrT7pt-i0PYAJwwdYaFCQAnCWZA",
-authDomain: "project1-fca40.firebaseapp.com",
-databaseURL: "https://project1-fca40-default-rtdb.firebaseio.com",
-projectId: "project1-fca40",
-storageBucket: "project1-fca40.appspot.com",
-messagingSenderId: "605675293659",
-appId: "1:605675293659:web:add09e49ca3f769436f5fe",
-measurementId: "G-VS7MLCNF1G"
-} );
+const firebaseConfig = {
+    apiKey: "AIzaSyCSWzicHrT7pt-i0PYAJwwdYaFCQAnCWZA",
+    authDomain: "project1-fca40.firebaseapp.com",
+    databaseURL: "https://project1-fca40-default-rtdb.firebaseio.com",
+    projectId: "project1-fca40",
+    storageBucket: "project1-fca40.appspot.com",
+    messagingSenderId: "605675293659",
+    appId: "1:605675293659:web:add09e49ca3f769436f5fe",
+    measurementId: "G-VS7MLCNF1G"
+  };
 
 const auth = getAuth(firebaseApp);
 const database= getFirestore(app);
@@ -83,3 +81,7 @@ function isValidPhone(phone) {
     // Implement your phone validation logic here (10 digits starts with 07)
     return /^07\d{8}$/.test(phone);
 }
+
+
+const app = initializeApp(firebaseConfig);
+const firestore = getFirestore(app);

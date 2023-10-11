@@ -1,43 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Firebase Registration Form</title>
+    <title>Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, #4caf50, #2196F3);
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            padding: 20px;
+        }
+
+        #signup-form {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        #signup-form label,
+        #signup-form input {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        #signup-form input[type="submit"] {
+            background: linear-gradient(to right, #4caf50, #2196F3);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #signup-form input[type="submit"]:hover {
+            background-color: linear-gradient(to right, #4caf50, #2196F3);
+        }
+
+        #error-message {
+            color: #ff0000;
+            margin-top: 10px;
+        }
+
+        .footer {
+            background: linear-gradient(to right, #2196F3, #4caf50);
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
 </head>
+
 <body>
-    <nav>
+    <div class="navbar">
         <a href="#">Home</a>
         <a href="#">About</a>
         <a href="#">Services</a>
         <a href="#">Contact</a>
-    </nav>
+    </div>
 
     <div class="container">
-        <h2>Register Now!</h2>
-        <div id="error-message"></div>
-        <form id="registration-form">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required><br><br>
+        <h1>Register Now!</h1>
+        <form id="signup-form">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="username">User Name:</label>
+            <input type="text" id="username" name="username" required><br>
+
+            <label for="phonenumber">Phone Number:</label>
+            <input type="text" id="phonenumber" name="phonenumber" required><br>
 
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
+            <input type="password" id="password" name="password" required><br>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br><br>
-
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required><br><br>
-
-            <input type="submit" value="Register">
+            <input type="submit" value="Submit">
         </form>
+        <div id="error-message"></div>
     </div>
-    <footer>
 
-        &copy; 2023 Your Company Name. All rights reserved.
-    </footer>
+    <div class="footer">
+        &copy; 2023 Your Website. All rights reserved.
+    </div>
 
-    <script src="app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-database.js"></script>
+    <script>
+         const firebaseConfig = {
+    apiKey: "AIzaSyBvjL8L2LGmdpAAOETJcbKTEm39ed69siU",
+  authDomain: "register-71a34.firebaseapp.com",
+  projectId: "register-71a34",
+  storageBucket: "register-71a34.appspot.com",
+  messagingSenderId: "552292594113",
+  appId: "1:552292594113:web:ca2e7c6599475072f57f40",
+  measurementId: "G-PNX09K9XYN"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+        var signupForm = document.getElementById('signup-form');
+
+        signupForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var email = document.getElementById('email').value;
+            var username = document.getElementById('username').value;
+            var phonenumber = document.getElementById('phonenumber').value;
+            var password = document.getElementById('password').value;
+
+            var usernamePattern = /^[a-zA-Z0-9_]+$/;
+            var phonePattern = /^07\d{8}$/;
+
+            if (!username.match(usernamePattern)) {
+                window.alert('user name not found');
+                return;
+            }
+
+            if (!phonenumber.match(phonePattern)) {
+                window.alert('phone number ');
+                return;
+            }
+
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(function(userCredential) {
+                    var user = userCredential.user;
+                    var userId = user.uid;
+
+                    var database = firebase.database();
+
+                    var userData = {
+                        email: email,
+                        username: username,
+                        phoneNumber: phonenumber
+                    };
+
+                    database.ref('users/' + userId).set(userData);
+
+             
+                    window.alert(' register success ' );
+                })
+                .catch(function(error) {
+                    var errorMessage = error.message;
+                    window.alert('error ' + errorMessage);
+                });
+        });
+
+    </script>
 </body>
+
 </html>
